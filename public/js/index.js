@@ -1,49 +1,38 @@
-
 var now = 0;
+var delta;
 
 function onWheel(e) {
-	$(this).off('wheel');
-	//e.preventDefault();
-	//e.originalEvent.preventDefault();
-	var delta = e.originalEvent.deltaY;
-	/*
-	for(var i=4; i>0; i--) {
-		if(x > wid * (i - 1)) {
-			now = i - 1;
-			break;
-		}
+	delta = e.originalEvent.deltaY;
+	if(delta > 0 && now < 1) {
+		now++;
+		ani('fast');
 	}
-	*/
-	console.log(now);
-	if(delta > 0 && now < 3) {
-		ani(delta);
+	else if(delta < 0 && now <= 1 && now > 0) {
+		now--;
+		ani('fast');
 	}
-	if(delta < 0 && now > 0) {
-		ani(delta);
+	else if(delta > 0 && now >= 1) {
+		now=now+0.2
+		deltaX += 60;
+		ani('slow');
+	}
+	else if(delta < 0 && now > 1) {
+		now=now-0.2
+		deltaX -= 60;
+		ani('slow');
 	}
 }
 
+var deltaX = 0;
+function ani(speed) {
+	var wid = $(window).width();
+	console.log(delta,deltaX);
+	if(speed == 'fast')	$(".main-wrapper").stop().animate({"left": -(now*wid)+ "px"} , 800);
+	if(speed == 'slow')	{
+		$(".main-wrapper").stop().css({"left": -wid-deltaX+ "px"});
+}}
 
 $(window).on('wheel', onWheel);
-
-
-
-
-
-function ani(delta) {
-	var wid = $(window).width();
-	var left = 0;
-	if(delta > 0){
-		left = Number($(".main-wrapper").css("left").replace("px", "")) + wid;
-	}
-	else {
-		left = Number($(".main-wrapper").css("left").replace("px", "")) - wid;
-	}
-	$(".main-wrapper").stop().animate({"left": -left+ "px"}, 300, function(){
-		$(window).on('wheel', onWheel);
-	})
-}
-
 /*
 function scrollHoriz() {
   $('html, body, *').off('mousewheel').mousewheel(function(e, delta) {
